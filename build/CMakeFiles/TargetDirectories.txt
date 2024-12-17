@@ -1,0 +1,3 @@
+/home/neo/Desktop/CENG 2. SENE/CENG209/Text Based Adventure Game/build/CMakeFiles/TextBasedAdventureGame.dir
+/home/neo/Desktop/CENG 2. SENE/CENG209/Text Based Adventure Game/build/CMakeFiles/edit_cache.dir
+/home/neo/Desktop/CENG 2. SENE/CENG209/Text Based Adventure Game/build/CMakeFiles/rebuild_cache.dir

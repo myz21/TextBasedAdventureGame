@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/TextBasedAdventureGame.dir/Player.c.o CMakeFiles/TextBasedAdventureGame.dir/Enemy.c.o CMakeFiles/TextBasedAdventureGame.dir/GameFunctions.c.o CMakeFiles/TextBasedAdventureGame.dir/Room.c.o CMakeFiles/TextBasedAdventureGame.dir/TextBasedAdventureGame.c.o -o TextBasedAdventureGame 
