@@ -57,7 +57,25 @@ void initializeRooms(Player *player) {
 
     // Initialize rooms
     for (int roomIndex = 0; roomIndex < ROOM_COUNT; roomIndex++) {
-        // Set room descriptions
+        // Set room descriptions and initialize enemies
+        int enemyCount = ENEMY_LENGTH;
+
+        for (int e = 0; e < enemyCount; e++) {
+            int enemyX = rand() % ROOM_WIDTH; // Random X position
+            int enemyY = rand() % ROOM_HEIGHT; // Random Y position
+
+            // Ensure the enemy does not spawn on the player or items
+            while ((enemyX == player->positionX && enemyY == player->positionY) || 
+                   (rooms[roomIndex].innerMap[enemyY][enemyX] != '\0')) {
+                enemyX = rand() % ROOM_WIDTH;
+                enemyY = rand() % ROOM_HEIGHT;
+            }
+
+            // Initialize the enemy
+            initializeEnemy(&rooms[roomIndex].enemies[e], "Goblin", 20, 5, enemyX, enemyY);
+            rooms[roomIndex].innerMap[enemyY][enemyX] = 'E'; // Place enemy in the room
+            //printf("Enemy position: (%d, %d)\n", enemyX, enemyY);
+        }
         if (roomIndex == 0) {
             strcpy(rooms[roomIndex].description, "A dark and eerie room.");
         } else if (roomIndex == 1) {
@@ -81,14 +99,10 @@ void initializeRooms(Player *player) {
             }
         }
         rooms[roomIndex].itemCount = itemCount; // Set the item count
-        // Randomly place the enemy in one of the rooms
-        int enemyRoomIndex = rand() % ROOM_COUNT; // Randomly select a room for the enemy
-        rooms[enemyRoomIndex].enemyPositionX = rand() % ROOM_WIDTH; // Set the X coordinate randomly
-        rooms[enemyRoomIndex].enemyPositionY = rand() % ROOM_HEIGHT; // Set the Y coordinate randomly
-        rooms[enemyRoomIndex].hasMonster = 1; // Indicate that this room has an enemy
-        rooms[enemyRoomIndex].innerMap[rooms[enemyRoomIndex].enemyPositionY][rooms[enemyRoomIndex].enemyPositionX] = 'E'; // Place enemy in the room
 
         // Print the room diagram after items are placed
         printRoomDiagram(player, roomIndex);
     }
 }
+
+

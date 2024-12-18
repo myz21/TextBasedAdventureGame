@@ -5,24 +5,18 @@
 #define ROOM_HEIGHT 5
 #define ROOM_COUNT 3
 #define MAX_ITEMS 10
+#define ENEMY_LENGTH 2
+
 #include "Player.h" // Include Player.h to recognize the Player type
 
 
-// I CHANGED
-/*
-#define WALL "#"
-#define EMPTY "."
-#define PLAYER "P"
-#define KNIFE "K"            
-#define SWORD "S"            
-#define HEALTH_POTION "H"  
-*/
 
 typedef struct {
     int enemyPositionX; // Add enemy X position
     int positionX; // Add room X position
     int positionY; // Add room Y position
     int enemyPositionY; // Add enemy Y position
+    Enemy enemies[ENEMY_LENGTH];
     char innerMap[ROOM_HEIGHT][ROOM_WIDTH];
     char description[256];
     char items[MAX_ITEMS];
@@ -34,6 +28,5 @@ typedef struct {
 extern Room rooms[ROOM_COUNT];
 
 void initializeRooms();
-void lookAround(Player *player);
 
 #endif

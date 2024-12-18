@@ -18,6 +18,7 @@ typedef struct {
     int positionX, positionY;
     int roomIndex; // Index of the room the player is currently in
     int score; // Player's score
+    const char *currentWeapon; // Add currentWeapon member
 } Player;
 
 void initializePlayer(Player *player);

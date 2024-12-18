@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h> // Include for directory types
-#include "Player.h"
-#include "Room.h"
+#include "Player.h" // Include Player.h for Player structure
+#include "Room.h" // Include Room.h for Room structure
 
 void saveGame(const char *filename) {
     FILE *file = fopen(filename, "w");
@@ -122,11 +122,10 @@ void movePlayer(Player *player, const char *direction) {
     }
 }
 
-
 //I CHANGED
 void lookAround(Player *player) {
-    Room currentRoom = rooms[player->roomIndex];
-    printf("\n%s\n", currentRoom.description); // Print room description
+    Room *currentRoom = &rooms[player->roomIndex];
+    printf("\n%s\n", currentRoom->description); // Print room description
 
     printf("Room Layout:\n");    
     for (int i = 0; i < ROOM_HEIGHT; i++) {
@@ -134,19 +133,32 @@ void lookAround(Player *player) {
             if (i == player->positionY && j == player->positionX) {
                 printf("P "); // Show the player
             } else {
-                char cell = currentRoom.innerMap[i][j];
+                char cell = currentRoom->innerMap[i][j];
+                
                 if (cell == '\0' || cell == ' ') { // If empty, show a dot
                     printf(". ");
                 } else {
-                    printf("%c ", cell); // Show item or enemy
+                    printf("%c ", cell); // Display items
+                    //printf("%c ", cell); // Show item or enemy
+                    /*
+                    int itemExists = 0;
+                    for (int k = 0; k < currentRoom->itemCount; k++) {
+                       if (currentRoom->items[k].x == j && currentRoom->items[k].y == i && !currentRoom->items[k].pickedUp) {    
+                            printf("%c ", currentRoom->items[k].symbol);
+                            itemExists = 1;
+                            break;
+                        }
+                       itemExists = 1;
+                    }
+                    if (!itemExists) {
+                        printf("%c ", cell); // Show item or enemy
+                    }*/
                 }
             }
         }
         printf("\n");
     }
 }
-
-
 
 void listSavedGames() {
     DIR *dir;
@@ -164,3 +176,7 @@ void listSavedGames() {
         perror("Could not open directory");
     }
 }
+
+
+
+

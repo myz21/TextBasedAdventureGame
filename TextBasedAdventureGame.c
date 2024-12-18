@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h> // Include for sleep function
-#include "Player.h"
 #include "Room.h"
+#include "Player.h"
+#include "enemy.h"
 #include "GameFunctions.h" // Include GameFunctions.h for function declarations
 
 Room rooms[ROOM_COUNT];
 Player player;
+//ADDED
 
 // Function declarations
 void movePlayer(Player *player, const char *direction);
@@ -18,12 +20,20 @@ void lookAround(Player *player);
 void healPlayer(Player *player);
 void listInventory(Player *player);
 
+
+
 void gameLoop() {
     char command[20];
     while (1) {
+        
         printf("\nEnter a command (move, pickup, inventory, heal, save <filepath>, load <filepath>, list, look, exit): ");
         printf("Current Player Position: (%d, %d), Room Index: %d\n", player.positionX, player.positionY, player.roomIndex);
+        
         int result = scanf("%s", command);
+
+        int ch;
+        while ((ch = getchar()) != '\n' && ch != EOF) {}
+        
         printf("Command received: %s (result: %d)\n", command, result);
 
         if (strcmp(command, "move") == 0) {
@@ -32,21 +42,11 @@ void gameLoop() {
             scanf("%s", direction);
             movePlayer(&player, direction); // Pass player reference
         } else if (strcmp(command, "pickup") == 0) { 
-            // Check for enemy proximity
-            if (rooms[player.roomIndex].hasMonster) {
-                if (player.positionX == rooms[player.roomIndex].enemyPositionX && 
-                    player.positionY == rooms[player.roomIndex].enemyPositionY) {
-                    printf("An enemy is nearby! It attacks you for 10 damage!\n");
-                    player.health -= 10; // Apply damage
-                    printf("Your health is now: %d\n", player.health);
-                    // Implement a delay for the attack (2 seconds)
-                    sleep(2);
-                }
-            }
             pickupItem(&player, player.positionX, player.positionY);
         } else if (strcmp(command, "look") == 0) {
             lookAround(&player);
-        } else if (strcmp(command, "inventory") == 0) {
+        }
+        else if (strcmp(command, "inventory") == 0) {
             listInventory(&player);
         } else if (strcmp(command, "heal") == 0) {
             healPlayer(&player);
@@ -54,6 +54,26 @@ void gameLoop() {
             saveGame("savegame.txt");
         } else if (strcmp(command, "load") == 0) {
             loadGame("savegame.txt");
+        } else if (strcmp(command, "attack") == 0) {
+            int enemyFound = 0;
+            Room currentRoom = rooms[player.roomIndex];
+            for (int i = 0; i < ENEMY_LENGTH; i++) {
+                Enemy enemy = currentRoom.enemies[i];
+                if (!enemy.isDefeated && enemy.positionX == player.positionX && enemy.positionY == player.positionY) {
+                    printf("\nENEMY IS HERE\n");
+                    //printf("weapon::::: %s", player.currentWeapon);
+                    attack(&player, &enemy, player.currentWeapon);
+                    enemyFound = 1;
+                    if (player.health <= 0) {
+                        printf("You died! Game over.\n");
+                        return; // Exit the loop and end the game
+                    }
+                    break;
+                }
+            }
+            if (!enemyFound) {
+                printf("No enemy here to attack!\n");
+            }
         } else if (strcmp(command, "quit") == 0) {
             printf("Exiting game. Goodbye!\n");
             break;
